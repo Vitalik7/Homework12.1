@@ -1,11 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-  [].forEach.call(document.querySelectorAll('.slider .animate'), function (carousel) {
+  [].forEach.call(document.querySelectorAll('.animate'), function (carousel) {
     var canMove = false;
     var previousLeft = null;
     var lengthImg = carousel.querySelectorAll('img').length;
     var imgWidth = parseFloat(getComputedStyle(carousel.querySelector('img')).width);
-    var maxLeft = (lengthImg - 1) * imgWidth
-
+    var maxLeft = (lengthImg - 1) * imgWidth;
+    var wrapIndicators = document.createElement('ul');
+    indicators();
     carousel.addEventListener('mousedown', mouseDown, false);
     carousel.addEventListener('touchstart', mouseDown, false);
 
@@ -22,26 +23,59 @@ document.addEventListener('DOMContentLoaded', () => {
     function mouseUp () {
       var carouselLeftAbs = Math.abs(parseFloat(getComputedStyle(carousel).left));
       var nextImageIndex = (carouselLeftAbs / imgWidth) | 0;
+
       if (carouselLeftAbs % imgWidth > imgWidth / 4) {
         nextImageIndex++;
+      };
+
+      if (carouselLeftAbs <= 0) {
+        nextImageIndex = 4;
+      };
+
+      if (carouselLeftAbs >= 600) {
+        nextImageIndex = 2;
+      }
+
+      if (carouselLeftAbs >= 1200) {
+        nextImageIndex = 3;
+      }
+
+      if (carouselLeftAbs >= 1800) {
+        nextImageIndex = 4;
       }
 
       if (carouselLeftAbs >= 2400) {
-        nextImageIndex = 0
-      }
+        nextImageIndex = 0;
+      };
 
-      if (carouselLeftAbs <= 0) {
-        nextImageIndex = 4
-      }
 
       carousel.style.left = -nextImageIndex * imgWidth + 'px';
       canMove = false;
       previousLeft = null;
-
-      if (nextImageIndex = 1) {
-        carousel.classList.add('current')
-      }
     };
+
+    function indicators() {
+      var carouselLeftAbs = Math.abs(parseFloat(getComputedStyle(carousel).left));
+      var index = (carouselLeftAbs / imgWidth) | 0;
+     wrapIndicators.classList.add('wrap-indicators');
+
+     if (lengthImg > 1) {
+       carousel.after(wrapIndicators);
+       for (let i = 0; i < lengthImg; i++) {
+         let dot = document.createElement('li');
+         dot.classList.add('dot');
+         if (carouselLeftAbs > 0 && carouselLeftAbs < 600) {
+           dot.classList.add('active');
+         }
+         dot.setAttribute('value', i);
+         dot.addEventListener('click', (e) => {
+           index = e.target.value;
+           carousel.style.left = -index * imgWidth + 'px';
+         });
+         wrapIndicators.appendChild(dot);
+       };
+     };
+   };
 
     function moveImages (event) {
       if (canMove) {
@@ -63,5 +97,4 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('mousemove', function (event) {
     event.preventDefault();
   }, false);
-
 }, false);
