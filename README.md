@@ -2,7 +2,7 @@ Homework 12.1
 
 Infinite slider.
 
-Installation
+Installation:
 Clone the repo  in chosen folder.
 To start project, run this command: npm start
 
