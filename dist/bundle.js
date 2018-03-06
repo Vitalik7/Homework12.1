@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       if (carouselLeftAbs <= 0) {
-        nextImageIndex = 4;
+        nextImageIndex = 1;
       };
 
       if (carouselLeftAbs >= 600) {
@@ -140,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function indicators() {
       var carouselLeftAbs = Math.abs(parseFloat(getComputedStyle(carousel).left));
       var index = (carouselLeftAbs / imgWidth) | 0;
+
      wrapIndicators.classList.add('wrap-indicators');
 
      if (lengthImg > 1) {
@@ -147,9 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
        for (let i = 0; i < lengthImg; i++) {
          let dot = document.createElement('li');
          dot.classList.add('dot');
-         if (carouselLeftAbs > 0 && carouselLeftAbs < 600) {
-           dot.classList.add('active');
-         }
+
          dot.setAttribute('value', i);
          dot.addEventListener('click', (e) => {
            index = e.target.value;
