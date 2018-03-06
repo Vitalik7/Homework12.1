@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nextImageIndex++;
       };
 
-      if (carouselLeftAbs <= 0) {
+            if (carouselLeftAbs <= 0) {
         nextImageIndex = 1;
       };
 
