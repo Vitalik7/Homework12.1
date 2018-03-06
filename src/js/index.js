@@ -71,12 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
            index = e.target.value;
            carousel.style.left = -index * imgWidth + 'px';
          });
-
-         for (i = 0; i < dot.length; i++) {
-            dot[i].className = dot[i].className.replace("active", "");
-         }
-         dot[index - 1].className += "active";
-
          wrapIndicators.appendChild(dot);
        };
      };
