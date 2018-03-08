@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var imgWidth = parseFloat(getComputedStyle(carousel.querySelector('img')).width);
     var maxLeft = (lengthImg - 1) * imgWidth;
     var wrapIndicators = document.createElement('ul');
+
     indicators();
     carousel.addEventListener('mousedown', mouseDown, false);
     carousel.addEventListener('touchstart', mouseDown, false);
@@ -130,40 +131,46 @@ document.addEventListener('DOMContentLoaded', () => {
       if (carouselLeftAbs >= 2400) {
         nextImageIndex = 0;
       };
-
-
       carousel.style.left = -nextImageIndex * imgWidth + 'px';
       canMove = false;
       previousLeft = null;
     };
 
-    function indicators() {
-      var carouselLeftAbs = Math.abs(parseFloat(getComputedStyle(carousel).left));
-      var index = (carouselLeftAbs / imgWidth) | 0;
+      function indicators() {
+          var carouselLeftAbs = Math.abs(parseFloat(getComputedStyle(carousel).left));
+          var index = (carouselLeftAbs / imgWidth) | 0;
+         wrapIndicators.classList.add('wrap-indicators');
 
-     wrapIndicators.classList.add('wrap-indicators');
+         if (lengthImg > 1) {
+           carousel.after(wrapIndicators);
+           for (let i = 0; i < lengthImg; i++) {
+             const dot = document.createElement('li');
+             dot.classList.add('dot');
 
-     if (lengthImg > 1) {
-       carousel.after(wrapIndicators);
-       for (let i = 0; i < lengthImg; i++) {
-         let dot = document.createElement('li');
-         dot.classList.add('dot');
+             dot.setAttribute('value', i);
+             dot.setAttribute('id', 'dots');
+             dot.addEventListener('click', (e) => {
+               index = e.target.value;
+               carousel.style.left = -index * imgWidth + 'px';
+               if (i === 1) {
+                dot.classList.add('active');
+               } else if (i === 2) {
+                 dot.classList.add('active');
+               } else if (i === 3) {
+                 dot.classList.add('active');
+               } else if (i === 4) {
+                 dot.classList.add('active');
+               }
+             });
 
-         dot.setAttribute('value', i);
-         dot.addEventListener('click', (e) => {
-           index = e.target.value;
-           carousel.style.left = -index * imgWidth + 'px';
-         });
+             if (i === 0) {
+               dot.classList.add('active')
+             }
 
-         for (i = 0; i < dot.length; i++) {
-            dot[i].className = dot[i].className.replace("active", "");
-         }
-         dot[index - 1].className += "active";
-
-         wrapIndicators.appendChild(dot);
+             wrapIndicators.appendChild(dot);
+           };
+         };
        };
-     };
-   };
 
     function moveImages (event) {
       if (canMove) {

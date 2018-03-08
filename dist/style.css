@@ -47,7 +47,7 @@ img {
   background: #f44336;
   border-radius: 50%; }
 
-.active {
+.active, #active {
   background: #ffffff; }
 
 /*# sourceMappingURL=style.css.map*/
