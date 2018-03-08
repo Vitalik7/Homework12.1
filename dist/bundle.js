@@ -81,6 +81,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* 1 */
 /***/ (function(module, exports) {
 
+const dotWidth = 12;
+
 document.addEventListener('DOMContentLoaded', () => {
   [].forEach.call(document.querySelectorAll('.animate'), function (carousel) {
     var canMove = false;
@@ -106,32 +108,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function mouseUp () {
       var carouselLeftAbs = Math.abs(parseFloat(getComputedStyle(carousel).left));
-      var nextImageIndex = (carouselLeftAbs / imgWidth) | 0;
-
-      if (carouselLeftAbs % imgWidth > imgWidth / 4) {
-        nextImageIndex++;
-      };
-
-      if (carouselLeftAbs <= 0) {
-        nextImageIndex = 1;
-      };
-
-      if (carouselLeftAbs >= 600) {
-        nextImageIndex = 2;
+      var focusedIndex = [].findIndex.call(carousel.querySelectorAll('img'), function (element) {
+        return element.classList.contains('focused');
+      });
+      if (focusedIndex * imgWidth - imgWidth / 2 > carouselLeftAbs) {
+        focusedIndex--;
+      } else if (focusedIndex * imgWidth + imgWidth / 2 < carouselLeftAbs) {
+        focusedIndex++;
       }
 
-      if (carouselLeftAbs >= 1200) {
-        nextImageIndex = 3;
+      if (carouselLeftAbs >= imgWidth * (lengthImg - 1)) {
+        focusedIndex = 0;
+      } else if (carouselLeftAbs === 0) {
+        focusedIndex = lengthImg - 1;
       }
 
-      if (carouselLeftAbs >= 1800) {
-        nextImageIndex = 4;
-      }
+      wrapIndicators.querySelector('.dot.active').classList.remove('active');
+      wrapIndicators.querySelectorAll('.dot')[focusedIndex].classList.add('active');
 
-      if (carouselLeftAbs >= 2400) {
-        nextImageIndex = 0;
-      };
-      carousel.style.left = -nextImageIndex * imgWidth + 'px';
+      carousel.style.left = -focusedIndex * imgWidth + 'px';
+      carousel.querySelector('img.focused').classList.remove('focused');
+      carousel.querySelectorAll('img')[focusedIndex].classList.add('focused');
       canMove = false;
       previousLeft = null;
     };
@@ -139,32 +136,26 @@ document.addEventListener('DOMContentLoaded', () => {
       function indicators() {
           var carouselLeftAbs = Math.abs(parseFloat(getComputedStyle(carousel).left));
           var index = (carouselLeftAbs / imgWidth) | 0;
-         wrapIndicators.classList.add('wrap-indicators');
+          const margin = `0 calc(${100 / lengthImg / 2}% - ${dotWidth / 2}px)`;
+          wrapIndicators.classList.add('wrap-indicators');
 
          if (lengthImg > 1) {
            carousel.after(wrapIndicators);
            for (let i = 0; i < lengthImg; i++) {
              const dot = document.createElement('li');
              dot.classList.add('dot');
+             dot.style.margin = margin;
 
              dot.setAttribute('value', i);
-             dot.setAttribute('id', 'dots');
              dot.addEventListener('click', (e) => {
                index = e.target.value;
+               wrapIndicators.querySelector('.dot.active').classList.remove('active');
+               wrapIndicators.querySelectorAll('.dot')[index].classList.add('active');
                carousel.style.left = -index * imgWidth + 'px';
-               if (i === 1) {
-                dot.classList.add('active');
-               } else if (i === 2) {
-                 dot.classList.add('active');
-               } else if (i === 3) {
-                 dot.classList.add('active');
-               } else if (i === 4) {
-                 dot.classList.add('active');
-               }
              });
 
              if (i === 0) {
-               dot.classList.add('active')
+               dot.classList.add('active');
              }
 
              wrapIndicators.appendChild(dot);
