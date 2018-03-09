@@ -24,8 +24,6 @@ img {
   height: 100%;
 }
 
-
-
 .section {
   cursor: pointer;
 }
@@ -39,7 +37,7 @@ img {
   bottom: 10px;
   width: 50%;
   height: 10px;
-  margin-left: 25%;
+  margin-left: 20%;
 }
 
 .dot {
@@ -56,4 +54,24 @@ img {
 
 .active, #active {
   background: #ffffff;
+}
+
+.left-arrow {
+  float: left;
+  top: 40%;
+  left: 2%;
+  position: relative;
+  z-index: 1;
+  color: #f44336;
+  font-size: 50px;
+}
+
+.right-arrow {
+  float: right;
+  top: 40%;
+  right: 2%;
+  position: relative;
+  z-index: 1;
+  color: #f44336;
+  font-size: 50px;
 }

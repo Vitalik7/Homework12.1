@@ -102,6 +102,37 @@ document.addEventListener('DOMContentLoaded', () => {
     carousel.addEventListener('mousemove', moveImages, false);
     carousel.addEventListener('touchmove', moveImages, false);
 
+    carousel.parentNode.querySelector('.left-arrow').addEventListener('click', function () {
+      var focusedIndex = [].findIndex.call(carousel.querySelectorAll('img'), function (element) {
+        return element.classList.contains('focused');
+      });
+      focusedIndex--;
+      if (focusedIndex < 0) {
+        focusedIndex = lengthImg - 1;
+      }
+
+      wrapIndicators.querySelector('.dot.active').classList.remove('active');
+      wrapIndicators.querySelectorAll('.dot')[focusedIndex].classList.add('active');
+      carousel.style.left = -focusedIndex * imgWidth + 'px';
+      carousel.querySelector('img.focused').classList.remove('focused');
+      carousel.querySelectorAll('img')[focusedIndex].classList.add('focused');
+    }, false);
+    carousel.parentNode.querySelector('.right-arrow').addEventListener('click', function () {
+      var focusedIndex = [].findIndex.call(carousel.querySelectorAll('img'), function (element) {
+        return element.classList.contains('focused');
+      });
+      focusedIndex++;
+      if (focusedIndex > lengthImg - 1) {
+        focusedIndex = 0;
+      }
+
+      wrapIndicators.querySelector('.dot.active').classList.remove('active');
+      wrapIndicators.querySelectorAll('.dot')[focusedIndex].classList.add('active');
+      carousel.style.left = -focusedIndex * imgWidth + 'px';
+      carousel.querySelector('img.focused').classList.remove('focused');
+      carousel.querySelectorAll('img')[focusedIndex].classList.add('focused');
+    }, false);
+
     function mouseDown () {
       canMove = true;
     };
@@ -117,15 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
         focusedIndex++;
       }
 
-      if (carouselLeftAbs >= imgWidth * (lengthImg - 1)) {
-        focusedIndex = 0;
-      } else if (carouselLeftAbs === 0) {
-        focusedIndex = lengthImg - 1;
-      }
-
       wrapIndicators.querySelector('.dot.active').classList.remove('active');
       wrapIndicators.querySelectorAll('.dot')[focusedIndex].classList.add('active');
-
       carousel.style.left = -focusedIndex * imgWidth + 'px';
       carousel.querySelector('img.focused').classList.remove('focused');
       carousel.querySelectorAll('img')[focusedIndex].classList.add('focused');
@@ -133,35 +157,37 @@ document.addEventListener('DOMContentLoaded', () => {
       previousLeft = null;
     };
 
-      function indicators() {
-          var carouselLeftAbs = Math.abs(parseFloat(getComputedStyle(carousel).left));
-          var index = (carouselLeftAbs / imgWidth) | 0;
-          const margin = `0 calc(${100 / lengthImg / 2}% - ${dotWidth / 2}px)`;
-          wrapIndicators.classList.add('wrap-indicators');
+    function indicators() {
+        var carouselLeftAbs = Math.abs(parseFloat(getComputedStyle(carousel).left));
+        var index = (carouselLeftAbs / imgWidth) | 0;
+        const margin = `0 calc(${100 / lengthImg / 2}% - ${dotWidth / 2}px)`;
+        wrapIndicators.classList.add('wrap-indicators');
 
-         if (lengthImg > 1) {
-           carousel.after(wrapIndicators);
-           for (let i = 0; i < lengthImg; i++) {
-             const dot = document.createElement('li');
-             dot.classList.add('dot');
-             dot.style.margin = margin;
+       if (lengthImg > 1) {
+         carousel.after(wrapIndicators);
+         for (let i = 0; i < lengthImg; i++) {
+           const dot = document.createElement('li');
+           dot.classList.add('dot');
+           dot.style.margin = margin;
 
-             dot.setAttribute('value', i);
-             dot.addEventListener('click', (e) => {
-               index = e.target.value;
-               wrapIndicators.querySelector('.dot.active').classList.remove('active');
-               wrapIndicators.querySelectorAll('.dot')[index].classList.add('active');
-               carousel.style.left = -index * imgWidth + 'px';
-             });
+           dot.setAttribute('value', i);
+           dot.addEventListener('click', (e) => {
+             index = e.target.value;
+             wrapIndicators.querySelector('.dot.active').classList.remove('active');
+             wrapIndicators.querySelectorAll('.dot')[index].classList.add('active');
+             carousel.style.left = -index * imgWidth + 'px';
+             carousel.querySelector('img.focused').classList.remove('focused');
+             carousel.querySelectorAll('img')[index].classList.add('focused');
+           });
 
-             if (i === 0) {
-               dot.classList.add('active');
-             }
+           if (i === 0) {
+             dot.classList.add('active');
+           }
 
-             wrapIndicators.appendChild(dot);
-           };
+           wrapIndicators.appendChild(dot);
          };
        };
+     };
 
     function moveImages (event) {
       if (canMove) {
